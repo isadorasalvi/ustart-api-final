@@ -17,5 +17,10 @@ namespace UStart.Domain.Commands
         public Decimal TotalItens { get; set; }
         public Decimal TotalDesconto { get; set; }
         public Decimal TotalProdutos { get; set; }
+
+        public PedidoCommand()
+        {
+            this.Itens = new List<PedidoItemCommand>();
+        }
     }
 }

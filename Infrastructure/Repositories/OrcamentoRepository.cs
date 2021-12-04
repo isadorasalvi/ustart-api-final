@@ -75,6 +75,8 @@ namespace UStart.Infrastructure.Repositories
             .Orcamentos
             .Include(c => c.Cliente)
             .Include(f => f.FormaPagamento)
+            .Include(i => i.Itens)
+                .ThenInclude(p => p.Produto)
             .Where(x => x.Cliente.Nome.ToLower().Contains(pesquisa))
             .Select(o => new OrcamentoResult(o))
             .ToList();

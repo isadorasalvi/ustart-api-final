@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UStart.API.TokenHelper;
 using UStart.Domain.Commands;
 using UStart.Domain.Contracts.Repositories;
 using UStart.Domain.Workflows;
@@ -33,7 +34,7 @@ namespace UStart.API.Controllers
         [HttpGet]        
         public IActionResult Get()
         {
-            return Ok(_pedidoRepository.RetornarTodos());
+            return Ok(this._pedidoRepository.RetornarTodos());
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace UStart.API.Controllers
         [Route("{id}")]    
         public IActionResult GetPorId([FromRoute] Guid id)
         {
-            return Ok(_pedidoRepository.ConsultarPorId(id));
+            return Ok(this._pedidoRepository.ConsultarPorId(id));
         }
 
         /// <summary>
@@ -56,12 +57,15 @@ namespace UStart.API.Controllers
         [HttpPost]            
         public IActionResult Adicionar([FromBody] PedidoCommand command)
         {
-            _pedidoWorkflow.Add(command);
-            if (_pedidoWorkflow.IsValid())
+            //Pega o usuário do token
+            command.UsuarioId = new Guid(this.HttpContext.GetUsuarioId());
+
+            this._pedidoWorkflow.Add(command);
+            if (this._pedidoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_pedidoWorkflow.GetErrors());
+            return BadRequest(this._pedidoWorkflow.GetErrors());
         }
 
         /// <summary>
@@ -74,12 +78,15 @@ namespace UStart.API.Controllers
         [Route("{id}")]           
         public IActionResult Atualizar([FromRoute] Guid id, [FromBody] PedidoCommand command)
         {
-            _pedidoWorkflow.Update(id, command);
-            if (_pedidoWorkflow.IsValid())
+            //Pega o usuário do token
+            command.UsuarioId = new Guid(this.HttpContext.GetUsuarioId());
+
+            this._pedidoWorkflow.Update(id, command);
+            if (this._pedidoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_pedidoWorkflow.GetErrors());
+            return BadRequest(this._pedidoWorkflow.GetErrors());
         }
 
         /// <summary>
@@ -90,12 +97,12 @@ namespace UStart.API.Controllers
         [HttpDelete("{id}")]            
         public IActionResult Deletar([FromRoute] Guid id)
         {
-            _pedidoWorkflow.Delete(id);
-            if (_pedidoWorkflow.IsValid())
+            this._pedidoWorkflow.Delete(id);
+            if (this._pedidoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_pedidoWorkflow.GetErrors());
+            return BadRequest(this._pedidoWorkflow.GetErrors());
         }
 
 

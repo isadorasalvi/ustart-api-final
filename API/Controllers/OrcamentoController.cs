@@ -34,14 +34,14 @@ namespace UStart.API.Controllers
         [HttpGet]        
         public IActionResult Get([FromQuery]string pesquisa)
         {
-            return Ok(_orcamentoRepository.Pesquisar(pesquisa));
+            return Ok(this._orcamentoRepository.Pesquisar(pesquisa));
         }
 
         [HttpGet("totais-por-data")]        
         public IActionResult GetTotais([FromBody] FiltroOrcamentoCommand filtro)
         {             
             //DateTime dtInicial, DateTime dtFinal
-            return Ok(_orcamentoRepository.ConsultarTotaisOrcamento(filtro.dtInicial, filtro.dtFinal));
+            return Ok(this._orcamentoRepository.ConsultarTotaisOrcamento(filtro.dtInicial, filtro.dtFinal));
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace UStart.API.Controllers
         [Route("{id}")]    
         public IActionResult GetPorId([FromRoute] Guid id)
         {
-            return Ok(_orcamentoRepository.GetOrcamentoResultPorId(id));
+            return Ok(this._orcamentoRepository.GetOrcamentoResultPorId(id));
         }
 
         /// <summary>
@@ -67,12 +67,12 @@ namespace UStart.API.Controllers
             //Pega o usuário do token
             command.UsuarioId = new Guid(this.HttpContext.GetUsuarioId());
             
-            _orcamentoWorkflow.Add(command);
-            if (_orcamentoWorkflow.IsValid())
+            this._orcamentoWorkflow.Add(command);
+            if (this._orcamentoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_orcamentoWorkflow.GetErrors());
+            return BadRequest(this._orcamentoWorkflow.GetErrors());
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace UStart.API.Controllers
             command.UsuarioId = new Guid(this.HttpContext.GetUsuarioId());
 
             //
-            _orcamentoWorkflow.Update(id, command);
-            if (_orcamentoWorkflow.IsValid())
+            this._orcamentoWorkflow.Update(id, command);
+            if (this._orcamentoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_orcamentoWorkflow.GetErrors());
+            return BadRequest(this._orcamentoWorkflow.GetErrors());
         }
 
         /// <summary>
@@ -105,12 +105,12 @@ namespace UStart.API.Controllers
         [HttpDelete("{id}")]            
         public IActionResult Deletar([FromRoute] Guid id)
         {
-            _orcamentoWorkflow.Delete(id);
-            if (_orcamentoWorkflow.IsValid())
+            this._orcamentoWorkflow.Delete(id);
+            if (this._orcamentoWorkflow.IsValid())
             {
                 return Ok();
             }
-            return BadRequest(_orcamentoWorkflow.GetErrors());
+            return BadRequest(this._orcamentoWorkflow.GetErrors());
         }
 
 
